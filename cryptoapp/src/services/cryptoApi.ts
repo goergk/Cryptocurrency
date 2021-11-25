@@ -53,7 +53,7 @@ export interface Coin {
     type: string;
     volume: number;
     marketCap: number;
-    price: string;
+    price: number;
     circulatingSupply: number;
     totalSupply: number;
     approvedSupply: boolean;
@@ -89,8 +89,8 @@ export const cryptoApi = createApi({
     reducerPath: 'cryptoAPI',
     baseQuery: fetchBaseQuery({ baseUrl }),
     endpoints: (builder) => ({
-        getCryptos: builder.query<RootObject, void>({
-            query: () => createRequest('/coins')
+        getCryptos: builder.query<RootObject, number>({
+            query: (count: number) => createRequest(`/coins?limit=${count}`)
         })
     })
 });
