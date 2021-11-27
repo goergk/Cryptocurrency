@@ -30,7 +30,7 @@ export interface Link {
 }
 
 export interface AllTimeHigh {
-    price: string;
+    price: number;
     timestamp: number;
 }
 
@@ -71,9 +71,19 @@ export interface Data {
     coins: Coin[];
 }
 
+export interface CoinData {
+    base: Base;
+    coin: Coin;
+}
+
 export interface RootObject {
     status: string;
     data: Data;
+}
+
+export interface RootObject_2 {
+    status: string;
+    data: CoinData;
 }
 
 const cryptoApiHeaders = {
@@ -90,9 +100,15 @@ export const cryptoApi = createApi({
     baseQuery: fetchBaseQuery({ baseUrl }),
     endpoints: (builder) => ({
         getCryptos: builder.query<RootObject, number>({
-            query: (count) => createRequest(`/coins?limit=${count}`)
+            query: (count) => createRequest(`/coins?limit=${count}`),
+        }),
+        getCryptoDetails: builder.query<RootObject_2, string>({
+            query: (coinId) => createRequest(`/coin/${coinId}`),
         })
     })
 });
 
-export const { useGetCryptosQuery } = cryptoApi;
+export const { 
+    useGetCryptosQuery, 
+    useGetCryptoDetailsQuery 
+} = cryptoApi;
