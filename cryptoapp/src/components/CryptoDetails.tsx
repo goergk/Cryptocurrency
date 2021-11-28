@@ -3,8 +3,9 @@ import HTMLReactParser from 'html-react-parser';
 import { useParams } from 'react-router-dom';
 import millify from 'millify';
 import { Col, Row, Select, Typography } from 'antd';
-import { useGetCryptoDetailsQuery } from '../services/cryptoApi';
+import { useGetCryptoDetailsQuery, useGetCryptoHistoryQuery } from '../services/cryptoApi';
 import { CheckOutlined, DollarCircleOutlined, ExclamationCircleOutlined, FundOutlined, MoneyCollectOutlined, NumberOutlined, StopOutlined, ThunderboltOutlined, TrophyOutlined } from '@ant-design/icons';
+import LineChart from './LineChart';
 
 const { Title, Text } = Typography;
 const { Option } = Select;
@@ -14,6 +15,7 @@ const CryptoDetails = () => {
     const { coinId } = useParams<{ coinId: string }>();
     const [timePeriod, setTimePeriod] = useState('7d')
     const { data, isFetching } = useGetCryptoDetailsQuery(coinId);
+    const { data: coinHistory } = useGetCryptoHistoryQuery({coinId, timePeriod });
 
     const cryptoDetails = data?.data?.coin;
     
@@ -91,7 +93,9 @@ const CryptoDetails = () => {
                         </ Option>
                     ))}
                 </Select>
-                {/* Line chart */}
+                <LineChart 
+                    coinHistory={coinHistory} currentPrice={millify(cryptoDetails?.price!)} coinName={cryptoDetails?.name}
+                />
                 <Col className="stats-container">
                     <Col className="coin-value-statistics">
                         <Col className="coin-value-statistics-heading">

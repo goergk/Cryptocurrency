@@ -76,6 +76,16 @@ export interface CoinData {
     coin: Coin;
 }
 
+export interface History {
+    price: number;
+    timestamp: number | Date;
+}
+
+export interface HistoryData {
+    change: number;
+    history: History[];
+}
+
 export interface RootObject {
     status: string;
     data: Data;
@@ -84,6 +94,11 @@ export interface RootObject {
 export interface RootObject_2 {
     status: string;
     data: CoinData;
+}
+
+export interface RootObject_3 {
+    status: string;
+    data: HistoryData;
 }
 
 const cryptoApiHeaders = {
@@ -104,11 +119,15 @@ export const cryptoApi = createApi({
         }),
         getCryptoDetails: builder.query<RootObject_2, string>({
             query: (coinId) => createRequest(`/coin/${coinId}`),
-        })
+        }),
+        getCryptoHistory: builder.query<RootObject_3, { coinId: string, timePeriod: string}>({
+            query: ({ coinId, timePeriod }) => createRequest(`/coin/${coinId}/history/${timePeriod}`),
+        }),
     })
 });
 
 export const { 
     useGetCryptosQuery, 
-    useGetCryptoDetailsQuery 
+    useGetCryptoDetailsQuery,
+    useGetCryptoHistoryQuery 
 } = cryptoApi;
